@@ -5,8 +5,6 @@
 // Package protocol contains the structs that map directly to the wire format
 // of the "Language Server Protocol".
 //
-// It is a literal transcription, with unmodified comments, and only the changes
-// required to make it go code.
 // Names are uppercased to export them.
 // All fields have JSON tags added to correct the names.
 // Fields marked with a ? are also marked as "omitempty"

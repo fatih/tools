@@ -7,14 +7,12 @@
 
 package protocol
 
+// PublishDiagnosticsParams defines the parameters to the
+// `textDocument/publishDiagnostics` method.
 type PublishDiagnosticsParams struct {
-	/**
-	 * The URI for which diagnostic information is reported.
-	 */
+	// URI for which diagnostic information is reported.
 	URI DocumentURI `json:"uri"`
 
-	/**
-	 * An array of diagnostic information items.
-	 */
+	// Diagnostics contains an array of diagnostic information items.
 	Diagnostics []Diagnostic `json:"diagnostics"`
 }

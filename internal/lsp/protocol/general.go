@@ -9,179 +9,132 @@ package protocol
 
 import "golang.org/x/tools/internal/jsonrpc2"
 
+// CancelParams defines the parameters to the `$/cancelRequest` method.
 type CancelParams struct {
-	/**
-	 * The request id to cancel.
-	 */
+	// ID of the request to cancel.
 	ID jsonrpc2.ID `json:"id"`
 }
 
+// InitializeParams defines the parameters to the  `initialize` method.
 type InitializeParams struct {
-	/**
-	 * The process Id of the parent process that started
-	 * the server. Is null if the process has not been started by another process.
-	 * If the parent process is not alive then the server should exit (see exit notification) its process.
-	 */
+	// ProcessID defines the ID of the parent process that started the server.
+	// Is null if the process has not been started by another process. If the
+	// parent process is not alive then the server should exit (see exit
+	// notification) its process.
 	ProcessID *float64 `json:"processId"`
 
-	/**
-	 * The rootPath of the workspace. Is null
-	 * if no folder is open.
-	 *
-	 * @deprecated in favour of rootURI.
-	 */
+	// RootPath of the workspace. Is null if no folder is open.
+	//
+	// Deprecated: Use protocol.RootURI instead.
 	RootPath *string `json:"rootPath"`
 
-	/**
-	 * The rootUri of the workspace. Is null if no
-	 * folder is open. If both `rootPath` and `rootUri` are set
-	 * `rootUri` wins.
-	 */
+	// RootURI of the workspace. Is null if no folder is open. If both
+	// protol.RootPath and protocol.RootURI are set protocol.RootURI
+	// wins.
 	RootURI *DocumentURI `json:"rootUri"`
 
-	/**
-	 * User provided initialization options.
-	 */
+	// InitializationOptions defines user provided initialization options.
 	InitializationOptions interface{} `json:"initializationOptions"`
 
-	/**
-	 * The capabilities provided by the client (editor or tool)
-	 */
+	// Capabilities provided by the client (editor or tool).
 	Capabilities ClientCapabilities `json:"capabilities"`
 
-	/**
-	 * The initial trace setting. If omitted trace is disabled ('off').
-	 */
+	// Trace setting. If omitted trace is disabled ('off').
 	Trace string `json:"trace"` // 'off' | 'messages' | 'verbose'
 
-	/**
-	 * The workspace folders configured in the client when the server starts.
-	 * This property is only available if the client supports workspace folders.
-	 * It can be `null` if the client supports workspace folders but none are
-	 * configured.
-	 *
-	 * Since 3.6.0
-	 */
+	// WorkspaceFolders is a set of workspace folders configured in the client
+	// when the server starts. This property is only available if the client
+	// supports workspace folders. It can be `null` if the client supports
+	// workspace folders but none are configured.
+	//
+	// Since 3.6.0
 	WorkspaceFolders []WorkspaceFolder `json:"workspaceFolders,omitempty"`
 }
 
-/**
- * Workspace specific client capabilities.
- */
+// WorkspaceClientCapabilities defines the capabilities the editor / tool
+// provides on the workspace.
 type WorkspaceClientCapabilities struct {
-	/**
-	 * The client supports applying batch edits to the workspace by supporting
-	 * the request 'workspace/applyEdit'
-	 */
+	// ApplyEdit is set to true if the client supports applying batch edits to
+	// the workspace by supporting the request 'workspace/applyEdit'
 	ApplyEdit bool `json:"applyEdit,omitempty"`
 
-	/**
-	 * Capabilities specific to `WorkspaceEdit`s
-	 */
+	// WorkSpaceEdit represents the capabilities specific to `WorkspaceEdit`s
 	WorkspaceEdit struct {
-		/**
-		 * The client supports versioned document changes in `WorkspaceEdit`s
-		 */
+		// DocumentChanges  is set to true if the client supports versioned
+		// document changes in `WorkspaceEdit`s
 		DocumentChanges bool `json:"documentChanges,omitempty"`
 	} `json:"workspaceEdit,omitempty"`
 
-	/**
-	 * Capabilities specific to the `workspace/didChangeConfiguration` notification.
-	 */
+	// DidChangeConfiguration represents the capabilities specific to the
+	// `workspace/didChangeConfiguration` notification.
 	DidChangeConfiguration struct {
-		/**
-		 * Did change configuration notification supports dynamic registration.
-		 */
+		// DynamicRegistration is true if notification supports dynamic registration.
 		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 	} `json:"didChangeConfiguration,omitempty"`
 
-	/**
-	 * Capabilities specific to the `workspace/didChangeWatchedFiles` notification.
-	 */
+	// DidChangeWatchedFiles represents the capabilities specific to the
+	// `workspace/didChangeWatchedFiles` notification.
 	DidChangeWatchedFiles struct {
-		/**
-		 * Did change watched files notification supports dynamic registration.
-		 */
+		// DynamicRegistration is true if notification supports dynamic registration.
 		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 	} `json:"didChangeWatchedFiles,omitempty"`
 
-	/**
-	 * Capabilities specific to the `workspace/symbol` request.
-	 */
+	// Symbol defines the capabilities specific to the `workspace/symbol` request.
 	Symbol struct {
-		/**
-		 * Symbol request supports dynamic registration.
-		 */
+		// DynamicRegistration is set to true if the request supports dynamic registration.
 		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 
-		/**
-		 * Specific capabilities for the `SymbolKind` in the `workspace/symbol` request.
-		 */
+		// SymbolKind defines capabilities for the `SymbolKind` in the `workspace/symbol` request.
 		SymbolKind struct {
-			/**
-			 * The symbol kind values the client supports. When this
-			 * property exists the client also guarantees that it will
-			 * handle values outside its set gracefully and falls back
-			 * to a default value when unknown.
-			 *
-			 * If this property is not present the client only supports
-			 * the symbol kinds from `File` to `Array` as defined in
-			 * the initial version of the protocol.
-			 */
+			// ValueSet contains a set of symbol kind values the client
+			// supports. When this property exists the client also guarantees
+			// that it will handle values outside its set gracefully and falls
+			// back to a default value when unknown.
+
+			// If this property is not present the client only supports
+			// the symbol kinds from `File` to `Array` as defined in
+			// the initial version of the protocol.
 			ValueSet []SymbolKind `json:"valueSet,omitempty"`
 		} `json:"symbolKind,omitempty"`
 	} `json:"symbol,omitempty"`
 
-	/**
-	 * Capabilities specific to the `workspace/executeCommand` request.
-	 */
+	//ExecuteCommand defines capabilities specific to the `workspace/executeCommand` request.
 	ExecuteCommand struct {
-		/**
-		 * Execute command supports dynamic registration.
-		 */
+		// DynamicRegistration is set to true if the execute command supports
+		// dynamic registration.
 		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 	} `json:"executeCommand,omitempty"`
 
-	/**
-	 * The client has support for workspace folders.
-	 *
-	 * Since 3.6.0
-	 */
+	// WorkspaceFolder is set to true if the client has support for workspace
+	// folders.
+	//
+	// Since 3.6.0
 	WorkspaceFolders bool `json:"workspaceFolders,omitempty"`
 
-	/**
-	 * The client supports `workspace/configuration` requests.
-	 *
-	 * Since 3.6.0
-	 */
+	// Configuration is set to true if the client supports
+	// `workspace/configuration` requests.
 	Configuration bool `json:"configuration,omitempty"`
 }
 
-/**
- * Text document specific client capabilities.
- */
+// TextDocumentClientCapabilities defines the text document specific client
+// capabilities.
 type TextDocumentClientCapabilities struct {
 	Synchronization struct {
-		/**
-		 * Whether text document synchronization supports dynamic registration.
-		 */
+		// DynamicRegistration is set to true if the text document
+		// synchronization supports dynamic registration.
 		DynamicRegistration bool `json:"dynamicRegistration,omitempty"`
 
-		/**
-		 * The client supports sending will save notifications.
-		 */
+		// WillSave is set to true if the client supports sending `will save`
+		// notifications.
 		WillSave bool `json:"willSave,omitempty"`
 
-		/**
-		 * The client supports sending a will save request and
-		 * waits for a response providing text edits which will
-		 * be applied to the document before it is saved.
-		 */
+		// WillSaveWaitUntil is set to true if the client supports sending a
+		// `will save` request and waits for a response providing text edits
+		// which will be applied to the document before it is saved.
 		WillSaveWaitUntil bool `json:"willSaveWaitUntil,omitempty"`
 
-		/**
-		 * The client supports did save notifications.
-		 */
+		// DidSave is set to true if the client supports `did save`
+		// notifications.
 		DidSave bool `json:"didSave,omitempty"`
 	} `json:"synchronization,omitempty"`
 

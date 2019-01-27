@@ -20,22 +20,19 @@ const (
 // that the contents of that string can be parsed as a valid URI.
 type DocumentURI string
 
-// Position in a text document expressed as zero-based line and zero-based character offset.
-// A position is between two characters like an ‘insert’ cursor in a editor.
+// Position in a text document expressed as zero-based line and zero-based
+// character offset. A position is between two characters like an ‘insert’
+// cursor in a editor.
 type Position struct {
-	/**
-	 * Line position in a document (zero-based).
-	 */
+	// Line position in a document (zero-based).
 	Line float64 `json:"line"`
 
-	/**
-	 * Character offset on a line in a document (zero-based). Assuming that the line is
-	 * represented as a string, the `character` value represents the gap between the
-	 * `character` and `character + 1`.
-	 *
-	 * If the character value is greater than the line length it defaults back to the
-	 * line length.
-	 */
+	// Character offset on a line in a document (zero-based). Assuming that the
+	// line is represented as a string, the `character` value represents the
+	// gap between the `character` and `character + 1`.
+	//
+	// If the character value is greater than the line length it defaults back
+	// to the line length.
 	Character float64 `json:"character"`
 }
 
@@ -46,14 +43,10 @@ type Position struct {
 // ending character(s) then use an end position denoting the start of the next
 // line.
 type Range struct {
-	/**
-	 * The range's start position.
-	 */
+	// Start defines the start position of the range.
 	Start Position `json:"start"`
 
-	/**
-	 * The range's end position.
-	 */
+	// End defines the start position of the range.
 	End Position `json:"end"`
 }
 
@@ -65,64 +58,44 @@ type Location struct {
 
 // LocationLink rerpesents a link betwee a source and a target location.AfterDelay
 type LocationLink struct {
-	/**
-	 * Span of the origin of this link.
-	 *
-	 * Used as the underlined span for mouse interaction. Defaults to the word range at
-	 * the mouse position.
-	 */
+	// OriginSelectionRange defines the origin of this link. Used as the
+	// underlined span for mouse interaction. Defaults to the word range at the
+	// mouse position.
 	OriginSelectionRange *Range `json:"originSelectionRange,omitempty"`
 
-	/**
-	 * The target resource identifier of this link.
-	 */
+	// TargetURI defines the target resource identifier of this link.
 	TargetURI string `json:"targetUri"`
 
-	/**
-	 * The full target range of this link.
-	 */
+	// TargetRange defines the full target range of this link.
 	TargetRange Range `json:"targetRange"`
 
-	/**
-	 * The span of this link.
-	 */
+	// TargetSelectionRange defines the span of this link.
 	TargetSelectionRange *Range `json:"targetSeletionRange,omitempty"`
 }
 
 // Diagnostic represents a diagnostic, such as a compiler error or warning.
 // Diagnostic objects are only valid in the scope of a resource.
 type Diagnostic struct {
-	/**
-	 * The range at which the message applies.
-	 */
+	// Range at which the message applies.
 	Range Range `json:"range"`
 
-	/**
-	 * The diagnostic's severity. Can be omitted. If omitted it is up to the
-	 * client to interpret diagnostics as error, warning, info or hint.
-	 */
+	// Severity of the diagnostic. Can be omitted. If omitted it is up to the
+	// client to interpret diagnostics as error, warning, info or hint.
 	Severity DiagnosticSeverity `json:"severity,omitempty"`
 
-	/**
-	 * The diagnostic's code, which might appear in the user interface.
-	 */
+	// Code of the diagnostic, which might appear in the user interface.
 	Code string `json:"code,omitempty"` // number | string
 
-	/**
-	 * A human-readable string describing the source of this
-	 * diagnostic, e.g. 'typescript' or 'super lint'.
-	 */
+	// Source describes a human-readable string of this diagnostic, e.g.
+	// 'typescript' or 'super lint'.
 	Source string `json:"source,omitempty"`
 
-	/**
-	 * The diagnostic's message.
-	 */
+	// Message of the diagnostic.
 	Message string `json:"message"`
 
-	/**
-	 * An array of related diagnostic information, e.g. when symbol-names within
-	 * a scope collide all definitions can be marked via this property.
-	 */
+	// Related contains an array of related diagnostic information, e.g. when
+	// symbol-names within a scope collide all definitions can be marked via
+	// this property.
 	Related []DiagnosticRelatedInformation `json:"relatedInformation,omitempty"`
 }
 
@@ -130,21 +103,16 @@ type Diagnostic struct {
 type DiagnosticSeverity float64
 
 const (
-	/**
-	 * Reports an error.
-	 */
+	// SeverityError reports an error.
 	SeverityError DiagnosticSeverity = 1
-	/**
-	 * Reports a warning.
-	 */
+
+	// SeverityWarning reports a warning.
 	SeverityWarning DiagnosticSeverity = 2
-	/**
-	 * Reports an information.
-	 */
+
+	// SeverityInformation reports an information.
 	SeverityInformation DiagnosticSeverity = 3
-	/**
-	 * Reports a hint.
-	 */
+
+	// SeverityHint reports a hint.
 	SeverityHint DiagnosticSeverity = 4
 )
 
@@ -153,14 +121,10 @@ const (
 // This should be used to point to code locations that cause or related to a
 // diagnostics, e.g when duplicating a symbol in a scope.
 type DiagnosticRelatedInformation struct {
-	/**
-	 * The location of this related diagnostic information.
-	 */
+	// Location of this related diagnostic information.
 	Location Location `json:"location"`
 
-	/**
-	 * The message of this related diagnostic information.
-	 */
+	// Message of this related diagnostic information.
 	Message string `json:"message"`
 }
 
@@ -170,35 +134,25 @@ type DiagnosticRelatedInformation struct {
 // The protocol currently doesn’t specify a set of well-known commands.
 // So executing a command requires some tool extension code.
 type Command struct {
-	/**
-	 * Title of the command, like `save`.
-	 */
+	// Title of the command, like `save`.
 	Title string `json:"title"`
 
-	/**
-	 * The identifier of the actual command handler.
-	 */
+	// Command is the identifier of the actual command handler.
 	Command string `json:"command"`
 
-	/**
-	 * Arguments that the command handler should be
-	 * invoked with.
-	 */
+	// Arguments that the command handler should be
+	// invoked with.
 	Arguments []interface{} `json:"arguments,omitempty"`
 }
 
 // TextEdit is a textual edit applicable to a text document.
 type TextEdit struct {
-	/**
-	 * The range of the text document to be manipulated. To insert
-	 * text into a document create a range where start === end.
-	 */
+	// Range of the text document to be manipulated. To insert text into a
+	// document create a range where start === end.
 	Range Range `json:"range"`
 
-	/**
-	 * The string to be inserted. For delete operations use an
-	 * empty string.
-	 */
+	// NewString defiens the string to be inserted. For delete operations use
+	// an empty string.
 	NewText string `json:"newText"`
 }
 
@@ -211,14 +165,10 @@ type TextEdit struct {
 // any kind of ordering.
 // However the edits must be non overlapping.
 type TextDocumentEdit struct {
-	/**
-	 * The text document to change.
-	 */
+	// TextDocument to be changed.
 	TextDocument VersionedTextDocumentIdentifier `json:"textDocument"`
 
-	/**
-	 * The edits to be applied.
-	 */
+	// Edits to be applied.
 	Edits []TextEdit `json:"edits"`
 }
 
@@ -227,17 +177,14 @@ type TextDocumentEdit struct {
 // If the client can handle versioned document edits and if DocumentChanges are
 // present, the latter are preferred over Changes.
 type WorkspaceEdit struct {
-	/**
-	 * Holds changes to existing resources.
-	 */
+	// Changes to existing resources.
 	Changes map[DocumentURI][]TextEdit `json:"changes,omitempty"`
 
-	/**
-	 * An array of `TextDocumentEdit`s to express changes to n different text documents
-	 * where each text document edit addresses a specific version of a text document.
-	 * Whether a client supports versioned document edits is expressed via
-	 * `WorkspaceClientCapabilities.workspaceEdit.documentChanges`.
-	 */
+	// DocumentChanges contains an array of `TextDocumentEdit`s to express
+	// changes to n different text documents where each text document edit
+	// addresses a specific version of a text document.
+	// Whether a client supports versioned document edits is expressed via
+	// `WorkspaceClientCapabilities.workspaceEdit.documentChanges`.
 	DocumentChanges []TextDocumentEdit `json:"documentChanges,omitempty"`
 }
 
@@ -245,62 +192,48 @@ type WorkspaceEdit struct {
 // On the protocol level, URIs are passed as strings.
 // The corresponding JSON structure looks like this.
 type TextDocumentIdentifier struct {
-	/**
-	 * The text document's URI.
-	 */
+	// URI is the text document's URI.
 	URI DocumentURI `json:"uri"`
 }
 
 // TextDocumentItem is an item to transfer a text document from the client to
 // the server.
 type TextDocumentItem struct {
-	/**
-	 * The text document's URI.
-	 */
+	// URI is the text document's URI.
 	URI DocumentURI `json:"uri"`
 
-	/**
-	 * The text document's language identifier.
-	 */
+	// LanguageID defines the language identifier of the text document.
 	LanguageID string `json:"languageId"`
 
-	/**
-	 * The version number of this document (it will increase after each
-	 * change, including undo/redo).
-	 */
+	// Version defines the number of this document (it will increase after each
+	// change, including undo/redo).
 	Version float64 `json:"version"`
 
-	/**
-	 * The content of the opened text document.
-	 */
+	// Text defines the content of the opened text document.
 	Text string `json:"text"`
 }
 
-// VersionedTextDocumentIdentifier is an identifier to denote a specific version of a text document.
+// VersionedTextDocumentIdentifier is an identifier to denote a specific
+// version of a text document.
 type VersionedTextDocumentIdentifier struct {
 	TextDocumentIdentifier
 
-	/**
-	 * The version number of this document. If a versioned text document identifier
-	 * is sent from the server to the client and the file is not open in the editor
-	 * (the server has not received an open notification before) the server can send
-	 * `null` to indicate that the version is known and the content on disk is the
-	 * truth (as speced with document content ownership)
-	 */
+	// Version defines the number of this document. If a versioned text
+	// document identifier is sent from the server to the client and the file
+	// is not open in the editor (the server has not received an open
+	// notification before) the server can send `null` to indicate that the
+	// version is known and the content on disk is the truth (as speced with
+	// document content ownership)
 	Version *uint64 `json:"version"`
 }
 
 // TextDocumentPositionParams is a parameter literal used in requests to pass
 // a text document and a position inside that document.
 type TextDocumentPositionParams struct {
-	/**
-	 * The text document.
-	 */
+	// TextDocument represents the text document.
 	TextDocument TextDocumentIdentifier `json:"textDocument"`
 
-	/**
-	 * The position inside the text document.
-	 */
+	// Position inside the text document.
 	Position Position `json:"position"`
 }
 
@@ -311,78 +244,62 @@ type TextDocumentPositionParams struct {
 //     { language: 'typescript', scheme: 'file' }
 //     { language: 'json', pattern: '**/package.json' }
 type DocumentFilter struct {
-	/**
-	 * A language id, like `typescript`.
-	 */
+	// Language defines the language id, like `typescript`.
 	Language string `json:"language,omitempty"`
 
-	/**
-	 * A URI [scheme](#URI.scheme), like `file` or `untitled`.
-	 */
+	// Scheme is a URI [scheme](#URI.scheme), like `file` or `untitled`.
 	Scheme string `json:"scheme,omitempty"`
 
-	/**
-	 * A glob pattern, like `*.{ts,js}`.
-	 */
+	// Pattern is a glob pattern, like `*.{ts,js}`.
 	Pattern string `json:"pattern,omitempty"`
 }
 
-// A document selector is the combination of one or more document filters.
+// DocumentSelector is the combination of one or more document filters.
 type DocumentSelector []DocumentFilter
 
-/**
- * Describes the content type that a client supports in various
- * result literals like `Hover`, `ParameterInfo` or `CompletionItem`.
- *
- * Please note that `MarkupKinds` must not start with a `$`. This kinds
- * are reserved for internal usage.
- */
+// MarkupKind describes the content type that a client supports in various
+// result literals like `Hover`, `ParameterInfo` or `CompletionItem`.
+//
+// Please note that `MarkupKinds` must not start with a `$`. This kinds
+// are reserved for internal usage.
 type MarkupKind string
 
 const (
-	/**
-	 * Plain text is supported as a content format
-	 */
+	// PlainText is supported as a content format.
 	PlainText MarkupKind = "plaintext"
 
-	/**
-	 * Markdown is supported as a content format
-	 */
+	// Markdown is supported as a content format.
 	Markdown MarkupKind = "markdown"
 )
 
-/**
- * A `MarkupContent` literal represents a string value which content is interpreted base on its
- * kind flag. Currently the protocol supports `plaintext` and `markdown` as markup kinds.
- *
- * If the kind is `markdown` then the value can contain fenced code blocks like in GitHub issues.
- * See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
- *
- * Here is an example how such a string can be constructed using JavaScript / TypeScript:
- * ```ts
- * let markdown: MarkdownContent = {
- *  kind: MarkupKind.Markdown,
- *	value: [
- *		'# Header',
- *		'Some text',
- *		'```typescript',
- *		'someCode();',
- *		'```'
- *	].join('\n')
- * };
- * ```
- *
- * *Please Note* that clients might sanitize the return markdown. A client could decide to
- * remove HTML from the markdown to avoid script execution.
- */
+// MarkupContent represents a string literal value which content is interpreted
+// base on its kind flag. Currently the protocol supports `plaintext` and
+// `markdown` as markup kinds.
+//
+// If the kind is `markdown` then the value can contain fenced code blocks like
+// in GitHub issues.
+// See https://help.github.com/articles/creating-and-highlighting-code-blocks/#syntax-highlighting
+//
+// Here is an example how such a string can be constructed using JavaScript / TypeScript:
+// ```ts
+// let markdown: MarkdownContent = {
+//  kind: MarkupKind.Markdown,
+//  value: [
+//  	'# Header',
+//  	'Some text',
+//  	'```typescript',
+//  	'someCode();',
+//  	'```'
+//  ].join('\n')
+// };
+// ```
+//
+// *Please Note* that clients might sanitize the return markdown. A client
+// could decide to remove HTML from the markdown to avoid script execution.
 type MarkupContent struct {
-	/**
-	 * The type of the Markup
-	 */
+	// Kind is the type of the Markup.
 	Kind MarkupKind `json:"kind"`
 
-	/**
-	 * The content itself
-	 */
+	// Value is the content itself.
 	Value string `json:"value"`
 }
